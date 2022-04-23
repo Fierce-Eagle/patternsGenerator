@@ -6,6 +6,6 @@ module patterns.pattern {
     requires com.dlsc.formsfx;
     requires org.kordamp.bootstrapfx.core;
 
-    opens patterns.pattern to javafx.fxml;
-    exports patterns.pattern;
+    opens project.patterngenerator to javafx.fxml;
+    exports project.patterngenerator;
 }
