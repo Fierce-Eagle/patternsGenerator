@@ -70,4 +70,6 @@ public abstract class Pattern implements IPattern {
         }
         return null;
     }
+
+    public VBox getBox() {return  box;}
 }
