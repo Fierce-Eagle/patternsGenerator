@@ -3,11 +3,7 @@ package project.patterngenerator.patterns.creational;
 import javafx.scene.layout.VBox;
 import project.patterngenerator.patterns.Pattern;
 
-/**
- * Класс для вывода реализации FactoryMethod
- */
-public class FactoryMethod extends Pattern {
-
+public class ObjectPool  extends Pattern {
     /**
      * Конструктор, похож на конструктор паттерна Observer,
      * при этом автоматически паттерн будет внесен в соответствующий список, согласно его вида,
@@ -15,7 +11,7 @@ public class FactoryMethod extends Pattern {
      *
      * @param box обязательный VBox для паттерна (даже не думай передавать туда null)
      */
-    public FactoryMethod(VBox box) {
+    public ObjectPool(VBox box) {
         super(box);
     }
 
@@ -27,7 +23,7 @@ public class FactoryMethod extends Pattern {
     @Override
     public String getCode() {
         // todo сделать привязку к VBox, считывание и отдельный метод
-        return "FactoryMethod code";
+        return "ObjectPool code";
     }
 
     /**
@@ -47,6 +43,6 @@ public class FactoryMethod extends Pattern {
      */
     @Override
     public String getName() {
-        return "FactoryMethod";
+        return "ObjectPool";
     }
 }
