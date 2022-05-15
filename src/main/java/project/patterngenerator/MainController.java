@@ -1,11 +1,21 @@
 package project.patterngenerator;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.VBox;
 import project.patterngenerator.patterns.Pattern;
+import project.patterngenerator.patterns.behavioral.Observer;
+import project.patterngenerator.patterns.behavioral.Visitor;
+import project.patterngenerator.patterns.creational.FactoryMethod;
+import project.patterngenerator.patterns.creational.ObjectPool;
+import project.patterngenerator.patterns.creational.Singleton;
+import project.patterngenerator.patterns.structural.Adapter;
+import project.patterngenerator.patterns.structural.Decorator;
+import project.patterngenerator.patterns.structural.Flyweight;
 
 /**
  * Контроллер, отвечает за связь между интерфейсом и моделью
@@ -38,6 +48,8 @@ public class MainController {
      */
     @FXML
     private ChoiceBox<String> patternChoiceBox, typeChoiceBox;
+
+    private ObservableList<String> patternAvailableChoices, typeAvailableChoices;
     /**
      * Поле для вывода сгенерированного кода
      */
@@ -49,6 +61,11 @@ public class MainController {
      */
     @FXML
     void initialize() {
+        initializePatterns();
+
+        typeAvailableChoices = FXCollections.observableArrayList("структурные", "порождающие", "поведенческие");
+        typeChoiceBox.setItems(typeAvailableChoices);
+
         // Click Actions
         typeChoiceBoxClickAction();
         patternChoiceBoxClickAction();
@@ -59,7 +76,7 @@ public class MainController {
      */
     @FXML
     void generateClick() {
-        textPatternArea.setText("some pattern");
+        textPatternArea.setText(Pattern.get(patternChoiceBox.getValue()).getCode());
     }
 
     /**
@@ -67,8 +84,27 @@ public class MainController {
      */
     void typeChoiceBoxClickAction() {
         typeChoiceBox.getSelectionModel().selectedIndexProperty().addListener((ov, value, new_value) -> {
+            patternAvailableChoices = null;
             // делает кнопку "Сгенерировать" недоступной, так как изменился вид паттерна, а название еще не выбрано
+
             generateButton.setDisable(true);
+            patternChoiceBox.getItems().clear();
+            switch (typeAvailableChoices.get(new_value.intValue())) {
+                case "структурные" -> {
+                    patternAvailableChoices = FXCollections.observableArrayList(Pattern.structural);
+                    patternChoiceBox.setItems(patternAvailableChoices);
+                }
+                case "порождающие" -> {
+                    patternAvailableChoices = FXCollections.observableArrayList(Pattern.creational);
+                    patternChoiceBox.setItems(patternAvailableChoices);
+                }
+                case "поведенческие" -> {
+                    patternAvailableChoices = FXCollections.observableArrayList(Pattern.behavioral);
+                    patternChoiceBox.setItems(patternAvailableChoices);
+                }
+                default -> {
+                }
+            }
         });
     }
 
@@ -77,7 +113,26 @@ public class MainController {
      */
     void patternChoiceBoxClickAction() {
         patternChoiceBox.getSelectionModel().selectedIndexProperty().addListener((ov, value, new_value) -> {
-
+            if (patternAvailableChoices != null) {
+                Pattern.get(patternAvailableChoices
+                                .get(new_value.intValue()))
+                        .notifyAllPatterns();
+                generateButton.setDisable(false);
+            }
         });
+    }
+
+    /**
+     * Создание паттернов
+     */
+    private void initializePatterns() {
+        new FactoryMethod(factoryMethodVBox);
+        new ObjectPool(objectPoolVBox);
+        new Observer(observerVBox);
+        new Singleton(singletonVBox);
+        new Visitor(visitorVBox);
+        new Adapter(adapterVBox);
+        new Decorator(decoratorVBox);
+        new Flyweight(flyweightVBox);
     }
 }
